@@ -1,51 +1,51 @@
 const petList2 = [
     {id:11,name:"鸭吉吉",element:"普通",
-        avatar:"/public/images/鸭吉吉立绘.png",
+        avatar:"/public/images/11.png",
         hp:106,atk:96,mat:96,def:94,mdf:99,spd:55,
         trait:{name:"普通特性",desc:"普通系效果"}
     },
     {id:12,name:"板板壳",element:"水",
-        avatar:"/public/images/板板壳立绘.png",
+        avatar:"/public/images/12.png",
         hp:106,atk:96,mat:96,def:94,mdf:99,spd:55,
         trait:{name:"水特性",desc:"水系效果"}
     },
     {id:13,name:"咔咔壳",element:"水",
-        avatar:"/public/images/咔咔壳立绘.png",
+        avatar:"/public/images/13.png",
         hp:106,atk:96,mat:96,def:94,mdf:99,spd:55,
         trait:{name:"水特性",desc:"水系效果"}
     },
     {id:14,name:"水泡壳",element:"水",
-        avatar:"/public/images/水泡壳立绘.png",
+        avatar:"/public/images/14.png",
         hp:106,atk:96,mat:96,def:94,mdf:99,spd:55,
         trait:{name:"水特性",desc:"水系效果"}
     },
     {id:15,name:"锥尾羊",element:"幽",
-        avatar:"/public/images/锥尾羊立绘.png",
+        avatar:"/public/images/15.png",
         hp:106,atk:96,mat:96,def:94,mdf:99,spd:55,
         trait:{name:"幽特性",desc:"幽系效果"}
     },
     {id:16,name:"铃兰羊",element:"幽",
-        avatar:"/public/images/铃兰羊立绘.png",
+        avatar:"/public/images/16.png",
         hp:106,atk:96,mat:96,def:94,mdf:99,spd:55,
         trait:{name:"幽特性",desc:"幽系效果"}
     },
     {id:17,name:"花影羚羊",element:["幽","恶"],
-        avatar:"/public/images/花影羚羊立绘.png",
+        avatar:"/public/images/17.png",
         hp:106,atk:96,mat:96,def:94,mdf:99,spd:55,
         trait:{name:"幽特性",desc:"幽系效果"}
     },
     {id:18,name:"雪绒鸟",element:"翼",
-        avatar:"/public/images/雪绒鸟立绘.png",
+        avatar:"/public/images/18.png",
         hp:106,atk:96,mat:96,def:94,mdf:99,spd:55,
         trait:{name:"翼特性",desc:"翼系效果"}
     },
     {id:19,name:"冬羽雀",element:"翼",
-        avatar:"/public/images/冬羽雀立绘.png",
+        avatar:"/public/images/19.png",
         hp:106,atk:96,mat:96,def:94,mdf:99,spd:55,
         trait:{name:"翼特性",desc:"翼系效果"}
     },
     {id:20,name:"岚鸟",element:"翼",
-        avatar:"/public/images/岚鸟立绘.png",
+        avatar:"/public/images/20.png",
         hp:106,atk:96,mat:96,def:94,mdf:99,spd:55,
         trait:{name:"翼特性",desc:"翼系效果"}
     },
