@@ -273,6 +273,14 @@ body {
     margin-top: 4px;
 }
 
+.footer {
+    text-align: left;
+    padding: 20px;
+    color: #4a4a4a;
+    margin-top: 40px;
+    font-size: 14px;
+}
+
 @media (max-width: 768px) {
     .pet-layout {
         flex-direction: column;
