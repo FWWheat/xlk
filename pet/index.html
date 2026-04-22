@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>洛克王国：世界 宠物图鉴</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- favicon 小图标 -->
+  <link rel="icon" href="public/leologo/leo_favicon.png" type="image/png">
+  <link rel="shortcut icon" href="public/leologo/leo_favicon.png" type="image/png">
+
+</head>
+<body>
+
+<!-- 顶部导航：左侧标题 + 右侧菜单 -->
+<div class="top-bar">
+  <h1>洛克王国：世界 宠物图鉴</h1>
+
+  <div class="top-menu">
+    <button class="top-menu-btn" onclick="location.href='index.html'">
+      <img src="public/leologo/pet_icon.png" class="menu-icon" alt="图鉴">
+      宠物图鉴
+    </button>
+    <button class="top-menu-btn" onclick="location.href='weakness.html'">
+       <img src="public/leologo/element_icon.png" class="menu-icon">属性克制
+    </button>
+  </div>
+</div>
+
+<!-- 内容区域 -->
+<div class="content">
+  <div class="page-container">
+    <div class="filter-bar" id="filterBar"></div>
+    <div class="sort-bar" id="sortBar"></div>
+    <div class="pet-grid" id="petGrid"></div>
+  </div>
+</div>
+
+<script src="load-pets.js"></script>
+
+<script>
+const petList = [...petList1, ...petList2, ...petList3, ...petList4, ...petList5, ...petList6, ...petList7, ...petList8, ...petList9, ...petList10,
+  ...petList11, ...petList12, ...petList13, ...petList14, ...petList15, ...petList16, ...petList17, ...petList18, ...petList19, ...petList20
+];
+
+let currentFilter = "全部";
+let currentSort = { field: null, dir: "desc" };
+
+const sortOptions = [
+  { field: "hp",  label: "血量" },
+  { field: "atk", label: "攻击" },
+  { field: "mat", label: "魔攻" },
+  { field: "def", label: "防御" },
+  { field: "mdf", label: "魔抗" },
+  { field: "spd", label: "速度" },
+];
+
+renderFilters();
+renderSortBar();
+renderPets(petList);
+
+function renderFilters() {
+  const bar = document.getElementById("filterBar");
+  bar.innerHTML = "";
+  allElements.forEach(el => {
+    const btn = document.createElement("button");
+    btn.className = "filter-btn";
+    if (el !== "全部" && elementColors[el]) {
+      btn.style.backgroundColor = "#fff";
+      btn.style.color = elementColors[el];
+      btn.style.border = `2px solid ${elementColors[el]}`;
+      btn.innerHTML = `<img src="public/icons/${el}.png" class="filter-icon">${el}`;
+    } else {
+      btn.textContent = el;
+      btn.style.border = `2px solid #ccc`;
+    }
+    btn.onclick = () => {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentFilter = el;
+      applyFilterAndSort();
+    };
+    bar.appendChild(btn);
+  });
+  bar.querySelector(".filter-btn").classList.add("active");
+}
+
+function renderSortBar() {
+  const bar = document.getElementById("sortBar");
+  bar.innerHTML = '<span class="sort-label">排序：</span>';
+  sortOptions.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = "sort-btn";
+    btn.dataset.field = opt.field;
+    btn.innerHTML = opt.label + ' <span class="sort-arrow"></span>';
+    btn.onclick = () => {
+      if (currentSort.field === opt.field) {
+        currentSort.dir = currentSort.dir === "desc" ? "asc" : "desc";
+      } else {
+        currentSort.field = opt.field;
+        currentSort.dir = "desc";
+      }
+      updateSortButtons();
+      applyFilterAndSort();
+    };
+    bar.appendChild(btn);
+  });
+}
+
+function updateSortButtons() {
+  document.querySelectorAll(".sort-btn").forEach(btn => {
+    const arrow = btn.querySelector(".sort-arrow");
+    if (btn.dataset.field === currentSort.field) {
+      btn.classList.add("active");
+      arrow.textContent = currentSort.dir === "desc" ? " ↓" : " ↑";
+    } else {
+      btn.classList.remove("active");
+      arrow.textContent = "";
+    }
+  });
+}
+
+function applyFilterAndSort() {
+  let list = petList;
+  if (currentFilter !== "全部") {
+    list = list.filter(p => {
+      const el = p.element;
+      return Array.isArray(el) ? el.includes(currentFilter) : el === currentFilter;
+    });
+  }
+  if (currentSort.field) {
+    const f = currentSort.field;
+    const dir = currentSort.dir === "desc" ? -1 : 1;
+    list = [...list].sort((a, b) => ((a[f] ?? 0) - (b[f] ?? 0)) * dir);
+  }
+  renderPets(list);
+}
+
+function renderPets(pets) {
+  const grid = document.getElementById("petGrid");
+  grid.innerHTML = "";
+  pets.forEach(pet => {
+    const card = document.createElement("div");
+    card.className = "small-card";
+    const elems = Array.isArray(pet.element) ? pet.element : [pet.element];
+    const bg = elems.length === 1 ? elementColors[elems[0]] : `linear-gradient(135deg, ${elementColors[elems[0]]}, ${elementColors[elems[1]]})`;
+    const statLabel = currentSort.field
+      ? `<div class="card-sort-stat">${sortOptions.find(o=>o.field===currentSort.field).label} ${pet[currentSort.field] ?? "—"}</div>`
+      : "";
+    card.innerHTML = `
+    <div class="avatar-box" style="background:${bg}">
+      <img class="avatar" src="public/images/${pet.id}.png" alt="${pet.name}">
+    </div>
+    <h4>编号 #${pet.id}</h4>
+    <h3>${pet.name}</h3>
+    ${statLabel}
+    <div style="display:flex;gap:4px;justify-content:center;margin-top:6px;flex-wrap:wrap">
+      ${elems.map(e => `
+      <span class="element" style="background:#f8f8f8; border:2px solid ${elementColors[e]}; color:#0e0e0e; display:inline-flex; align-items:center; gap:4px;">
+        <img src="public/icons/${e}.png" class="element-icon">
+        ${e}
+      </span>
+      `).join('')}
+    </div>
+  `;
+    card.onclick = () => location.href = `detail.html?id=${pet.id}`;
+    grid.appendChild(card);
+  });
+}
+
+function filterPets(type) {
+  currentFilter = type;
+  applyFilterAndSort();
+}
+</script>
+
+<!-- 版权声明 -->
+<footer class="footer">
+  <p>© 2026 ‘洛克王国宠物图鉴’ Developed by ‘@lionhacker’</p>
+  <p>本项目部分素材与内容引用自 <a href="https://wiki.biligame.com/rocom/" target="_blank" style="color:#666;text-decoration:underline;">B站洛克王国Wiki</a>，其版权归哔哩哔哩游戏wiki所有</p>
+  <p>洛克王国游戏版权归腾讯公司所有 | 仅用于学习交流，非官方站点</p>
+</footer>
+
+</body>
+</html>
