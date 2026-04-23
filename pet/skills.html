@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>洛克王国：世界 技能图鉴</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="public/leologo/leo_favicon.png" type="image/png">
+  <link rel="shortcut icon" href="public/leologo/leo_favicon.png" type="image/png">
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>洛克王国：世界 技能图鉴</h1>
+  <div class="top-menu">
+    <button class="top-menu-btn" onclick="location.href='index.html'">
+      <img src="public/leologo/pet_icon.png" class="menu-icon" alt="宠物图鉴">
+      宠物图鉴
+    </button>
+    <button class="top-menu-btn active" onclick="location.href='skills.html'">
+      <img src="public/leologo/element_icon.png" class="menu-icon" alt="技能图鉴">
+      技能图鉴
+    </button>
+    <button class="top-menu-btn" onclick="location.href='weakness.html'">
+      <img src="public/leologo/element_icon.png" class="menu-icon" alt="属性克制">
+      属性克制
+    </button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="page-container">
+    <section class="skill-catalog-shell">
+      <div class="skill-catalog-header">
+        <div>
+          <h2>技能检索</h2>
+          <p class="skill-catalog-subtitle">按属性、类型、威力、能耗和描述关键词快速筛选技能。</p>
+        </div>
+        <div class="skill-catalog-count" id="skillCount"></div>
+      </div>
+
+      <section class="skill-catalog-toolbar">
+        <div class="skill-search-row">
+          <label class="sr-only" for="skillKeyword">关键词搜索</label>
+          <input id="skillKeyword" class="skill-search-input" type="search" placeholder="输入技能描述关键词或技能名">
+        </div>
+        <div class="filter-bar" id="skillElementFilters"></div>
+        <div class="skill-select-row">
+          <div>
+            <label class="skill-select-label" for="skillTypeFilter">技能类型</label>
+            <select id="skillTypeFilter" class="skill-select"></select>
+          </div>
+
+          <div>
+            <label class="skill-select-label" for="skillPowerFilter">技能威力</label>
+            <select id="skillPowerFilter" class="skill-select"></select>
+          </div>
+
+          <div>
+            <label class="skill-select-label" for="skillCostFilter">技能能耗</label>
+            <select id="skillCostFilter" class="skill-select"></select>
+          </div>
+        </div>
+        <div class="sort-bar" id="skillSortBar"></div>
+      </section>
+
+      <section id="skillDetailPanel" class="skill-detail-panel" hidden></section>
+      <div id="skillEmptyState" class="skill-empty-state" hidden>没有找到符合条件的技能。</div>
+      <div id="skillGrid" class="skill-catalog-grid"></div>
+    </section>
+  </div>
+</div>
+
+<script src="load-pets.js"></script>
+<script src="skills.js"></script>
+
+<footer class="footer">
+  <p>© 2026 洛克王国宠物图鉴 Developed by @HackerLion03</p>
+  <p>本项目部分素材与内容引用自 <a href="https://wiki.biligame.com/rocom/" target="_blank" style="color:#666;text-decoration:underline;">B站洛克王国Wiki</a>，其版权归对应 Wiki 所有。</p>
+  <p>洛克王国游戏及相关 IP 版权归腾讯公司所有，仅用于学习交流，非官方站点。</p>
+</footer>
+
+</body>
+</html>

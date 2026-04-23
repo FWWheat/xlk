@@ -5,82 +5,154 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>宠物详情</title>
   <link rel="stylesheet" href="style.css">
-
-  <!-- 👇 核心：favicon 代码，直接复制 -->
-  <link rel="icon" href="public/leo_favicon.png" type="image/png">
-  <link rel="shortcut icon" href="public/leo_favicon.png" type="image/png">
-
+  <link rel="icon" href="public/leologo/leo_favicon.png" type="image/png">
+  <link rel="shortcut icon" href="public/leologo/leo_favicon.png" type="image/png">
 </head>
 <body>
+
+<div class="top-bar">
+  <h1>洛克王国：世界 宠物详情</h1>
+  <div class="top-menu">
+    <button class="top-menu-btn" onclick="location.href='index.html'">
+      <img src="public/leologo/pet_icon.png" class="menu-icon" alt="pets">
+      宠物图鉴
+    </button>
+    <button class="top-menu-btn" onclick="location.href='skills.html'">
+      <img src="public/leologo/element_icon.png" class="menu-icon" alt="skills">
+      技能图鉴
+    </button>
+    <button class="top-menu-btn" onclick="location.href='weakness.html'">
+      <img src="public/leologo/element_icon.png" class="menu-icon" alt="weakness">
+      属性克制
+    </button>
+  </div>
+</div>
 
 <script src="load-pets.js"></script>
 
 <div class="page-container">
-  <button class="back-btn" onclick="history.back()">← 返回图鉴</button>
+  <button class="back-btn" onclick="history.back()">返回图鉴</button>
   <div id="detailArea" class="detail-card"></div>
 </div>
 
 <script>
-const petList = [...petList1, ...petList2, ...petList3, ...petList4, ...petList5, ...petList6, ...petList7, ...petList8, ...petList9, ...petList10,
-  ...petList11, ...petList12, ...petList13, ...petList14, ...petList15, ...petList16, ...petList17, ...petList18, ...petList19, ...petList20
-];
+const petList = (window.worldPetList && window.worldPetList.length)
+  ? window.worldPetList
+  : [...petList1, ...petList2, ...petList3, ...petList4, ...petList5, ...petList6, ...petList7, ...petList8, ...petList9, ...petList10,
+    ...petList11, ...petList12, ...petList13, ...petList14, ...petList15, ...petList16, ...petList17, ...petList18, ...petList19, ...petList20
+  ];
+
 const params = new URLSearchParams(location.search);
-const id = parseInt(params.get("id"));
-const pet = petList.find(p => p.id === id);
+const requestedId = params.get("id");
+
+const pet = petList.find(item => String(item.id) === String(requestedId))
+  || petList.find(item => String(item.no) === String(requestedId))
+  || petList.find(item => String(item.key || "") === String(requestedId));
+
+function getPetImage(pet) {
+  return pet.image || pet.avatar || `public/images/${pet.id}.png`;
+}
+
+function getSkillImage(skill) {
+  return skill.icon || encodeURI(`public/skills/${skill.element}/${skill.name}.png`);
+}
+
+function renderElementBadges(elements, darkMode) {
+  return (Array.isArray(elements) ? elements : [elements]).map(element => `
+    <span class="element" style="background:${darkMode ? "#1a1a1d" : "#f8f8f8"}; border:2px solid ${elementColors[element] || "#ccc"}; color:${darkMode ? "#e0e0e0" : "#0e0e0e"}; display:inline-flex; align-items:center; gap:4px;">
+      <img src="public/icons/${element}.png" class="element-icon" alt="${element}">
+      ${element}
+    </span>
+  `).join("");
+}
+
+function renderSkillCards(skills) {
+  if (!skills || skills.length === 0) {
+    return '<div class="skill-item">暂无数据</div>';
+  }
+
+  return skills.map(skill => `
+    <div class="skill-item" style="display:flex; align-items:flex-start; gap:10px;">
+      <img src="${getSkillImage(skill)}" class="skill-icon" alt="${skill.name}" onerror="this.style.display='none'">
+      <div class="skill-info">
+        <div class="skill-name">${skill.name}</div>
+        ${skill.desc ? `<div style="font-size:13px;color:#ccc;margin-top:4px;">${skill.desc}</div>` : ""}
+        <div class="skill-desc" style="display:flex; gap:12px; margin-top:4px; flex-wrap:wrap;">
+          <span>属性：${skill.element || "-"}</span>
+          <span>威力：${skill.power ?? 0}</span>
+          <span>类型：${skill.type || "-"}</span>
+          <span>能量消耗：${skill.cost ?? 0}</span>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderCounterRows(restrain) {
+  const rows = [
+    ["攻击克制", restrain?.strongAgainst || []],
+    ["被克制", restrain?.weakAgainst || []],
+    ["抵抗", restrain?.resist || []],
+    ["被抵抗", restrain?.resisted || []],
+  ];
+
+  return rows.map(([label, values]) => `
+    <div class="trait-box" style="display:flex; align-items:flex-start; gap:12px;">
+      <div class="trait-name" style="min-width:88px;">${label}</div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        ${values.length ? renderElementBadges(values, false) : '<span class="trait-desc">无</span>'}
+      </div>
+    </div>
+  `).join("");
+}
 
 if (pet) {
   const elems = Array.isArray(pet.element) ? pet.element : [pet.element];
-  const bg = elems.length === 1 
-    ? elementColors[elems[0]] 
+  const bg = elems.length === 1
+    ? elementColors[elems[0]]
     : `linear-gradient(135deg, ${elementColors[elems[0]]}, ${elementColors[elems[1]]})`;
 
   document.getElementById("detailArea").innerHTML = `
     <div class="pet-layout">
       <div class="left-section">
         <div class="avatar-box" style="background:${bg}">
-          <img class="avatar" src="public/images/${pet.id}.png" alt="${pet.name}">
+          <img class="avatar" src="${getPetImage(pet)}" alt="${pet.name}">
         </div>
         <div class="name-row">
           <h2 class="pet-name">${pet.name}</h2>
-            ${elems.map(e => `
-            <span class="element" style="background:#1a1a1d; border:2px solid ${elementColors[e]}; color:#e0e0e0; display:inline-flex; align-items:center; gap:4px;">
-              <img src="public/icons/${e}.png" class="element-icon">
-              ${e}
-            </span>
-            `).join('')}
+          ${renderElementBadges(elems, true)}
         </div>
 
         <h3>特性</h3>
         <div class="trait-box" style="display:flex; align-items:center; gap:12px;">
-          <img src="public/traits/${pet.trait?.name || 'default'}.png" class="trait-icon" alt="特性图标">
           <div class="trait-text">
-            <div class="trait-name">${pet.trait?.name || '无特性'}</div>
-            <div class="trait-desc">${pet.trait?.desc || ''}</div>
+            <div class="trait-name">${pet.trait?.name || "无特性"}</div>
+            <div class="trait-desc">${pet.trait?.desc || ""}</div>
           </div>
+        </div>
+
+        <h3>形态信息</h3>
+        <div class="trait-box">
+          <div class="trait-desc">编号：${pet.no || pet.id}</div>
+          <div class="trait-desc">阶段：${pet.typeName || "-"}</div>
+          <div class="trait-desc">形态：${pet.formName || "-"}</div>
         </div>
       </div>
 
       <div class="right-section">
         <h3>种族值</h3>
-        <div class= "stats-grid">
-          
+        <div class="stats-grid">
           <div class="stat-radar-3d">
-            <!-- 六边形网格 -->
-            <div class="radar-grid">
-            </div>
-
-            <!-- 数值区域 -->
+            <div class="radar-grid"></div>
             <div class="radar-area" style="
-              --hp: ${pet.hp /3}%;
-              --atk: ${pet.atk /3}%;
-              --mat: ${pet.mat /3}%;
-              --def: ${pet.def /3}%;
-              --mdf: ${pet.mdf /3}%;
-              --spd: ${pet.spd /3}%;
-            ">
-            </div>
+              --hp: ${pet.hp / 3}%;
+              --atk: ${pet.atk / 3}%;
+              --mat: ${(pet.mat ?? pet.matk ?? 0) / 3}%;
+              --def: ${pet.def / 3}%;
+              --mdf: ${(pet.mdf ?? pet.mdef ?? 0) / 3}%;
+              --spd: ${pet.spd / 3}%;
+            "></div>
 
-            <!-- 六个角的标签 -->
             <div class="radar-label label-hp">血量</div>
             <div class="radar-label label-atk">攻击</div>
             <div class="radar-label label-mat">魔攻</div>
@@ -89,39 +161,43 @@ if (pet) {
             <div class="radar-label label-spd">速度</div>
           </div>
 
-          <!-- 下方统一数值条 -->
           <div class="stat-numbers-bar">
             <span>血量 ${pet.hp}</span>
             <span>攻击 ${pet.atk}</span>
-            <span>魔攻 ${pet.mat}</span>
+            <span>魔攻 ${pet.mat ?? pet.matk ?? 0}</span>
             <span>防御 ${pet.def}</span>
-            <span>魔抗 ${pet.mdf}</span>
+            <span>魔抗 ${pet.mdf ?? pet.mdef ?? 0}</span>
             <span>速度 ${pet.spd}</span>
           </div>
         </div>
       </div>
+    </div>
 
-    </div> <!-- 👈 这个闭合标签必须在技能区域的前面！ -->
-
-    <!-- 👇 技能区域放在这里，才会在下半界面！ -->
     <div class="middle-section">
-      <h3>技能</h3>
+      <h3>血脉技能</h3>
       <div class="skills-grid">
-          ${(pet.skills || []).map(s => `
-            <div class="skill-item" style="display:flex; align-items:center; gap:10px;">
-              <img src="public/skills/${s.element}/${s.name}.png" class="skill-icon">
-              <div class="skill-info">
-                <div class="skill-name">${s.name}</div>
-                ${s.desc ? `<div style="font-size:13px;color:#ccc;margin-top:4px;">${s.desc}</div>` : ''}
-                <div class="skill-desc" style="display:flex; gap:12px; margin-top:4px;">
-                  <span>属性：${s.element || '-'}</span>
-                  <span>威力：${s.power || '0'}</span>
-                  <span>类型：${s.type || '-'}</span>
-                  <span>能量消耗：${s.cost || '0'} </span>
-                </div>                
-              </div>
-            </div>
-          `).join('')}
+        ${renderSkillCards(pet.bloodlineSkills || [])}
+      </div>
+    </div>
+
+    <div class="middle-section">
+      <h3>自带技能</h3>
+      <div class="skills-grid">
+        ${renderSkillCards(pet.ownSkills || pet.skills || [])}
+      </div>
+    </div>
+
+    <div class="middle-section">
+      <h3>可学技能石</h3>
+      <div class="skills-grid">
+        ${renderSkillCards(pet.skillStoneSkills || [])}
+      </div>
+    </div>
+
+    <div class="middle-section">
+      <h3>克制关系</h3>
+      <div style="display:grid; gap:12px;">
+        ${renderCounterRows(pet.restrain || {})}
       </div>
     </div>
   `;
@@ -130,11 +206,10 @@ if (pet) {
 }
 </script>
 
-<!-- 版权声明 -->
 <footer class="footer">
-  <p>© 2026 ‘洛克王国宠物图鉴’ Developed by ‘@lionhacker’</p>
-  <p>本项目部分素材与内容引用自 <a href="https://wiki.biligame.com/rocom/" target="_blank" style="color:#666;text-decoration:underline;">B站洛克王国Wiki</a>，其版权归哔哩哔哩游戏wiki所有</p>
-  <p>洛克王国游戏版权归腾讯公司所有 | 仅用于学习交流，非官方站点</p>
+  <p>© 2026 洛克王国宠物图鉴 Developed by @HackerLion03</p>
+  <p>本项目部分素材与内容引用自 <a href="https://wiki.biligame.com/rocom/" target="_blank" style="color:#666;text-decoration:underline;">B站洛克王国Wiki</a>，其版权归对应 Wiki 所有。</p>
+  <p>洛克王国游戏及相关 IP 版权归腾讯公司所有，仅用于学习交流，非官方站点。</p>
 </footer>
 
 </body>

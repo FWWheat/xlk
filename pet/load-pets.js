@@ -19,3 +19,4 @@ document.write('<script src="data/pets17.js"><\/script>');
 document.write('<script src="data/pets18.js"><\/script>');
 document.write('<script src="data/pets19.js"><\/script>');
 document.write('<script src="data/pets20.js"><\/script>');
+document.write('<script src="data/world-data.js"><\/script>');

@@ -22,6 +22,10 @@
       <img src="public/leologo/pet_icon.png" class="menu-icon" alt="图鉴">
       宠物图鉴
     </button>
+    <button class="top-menu-btn" onclick="location.href='skills.html'">
+      <img src="public/leologo/element_icon.png" class="menu-icon" alt="skills">
+      技能图鉴
+    </button>
     <button class="top-menu-btn" onclick="location.href='weakness.html'">
        <img src="public/leologo/element_icon.png" class="menu-icon">属性克制
     </button>
@@ -40,9 +44,23 @@
 <script src="load-pets.js"></script>
 
 <script>
-const petList = [...petList1, ...petList2, ...petList3, ...petList4, ...petList5, ...petList6, ...petList7, ...petList8, ...petList9, ...petList10,
-  ...petList11, ...petList12, ...petList13, ...petList14, ...petList15, ...petList16, ...petList17, ...petList18, ...petList19, ...petList20
-];
+const petList = (window.worldPetList && window.worldPetList.length)
+  ? window.worldPetList
+  : [...petList1, ...petList2, ...petList3, ...petList4, ...petList5, ...petList6, ...petList7, ...petList8, ...petList9, ...petList10,
+    ...petList11, ...petList12, ...petList13, ...petList14, ...petList15, ...petList16, ...petList17, ...petList18, ...petList19, ...petList20
+  ];
+
+function getPetCardImage(pet) {
+  return pet.image || pet.avatar || `public/images/${pet.id}.png`;
+}
+
+function getPetLinkId(pet) {
+  return encodeURIComponent(String(pet.id ?? pet.no ?? pet.name));
+}
+
+function getPetDisplayNo(pet) {
+  return pet.no || `#${pet.id}`;
+}
 
 let currentFilter = "全部";
 let currentSort = { field: null, dir: "desc" };
@@ -150,9 +168,9 @@ function renderPets(pets) {
       : "";
     card.innerHTML = `
     <div class="avatar-box" style="background:${bg}">
-      <img class="avatar" src="public/images/${pet.id}.png" alt="${pet.name}">
+      <img class="avatar" src="${getPetCardImage(pet)}" alt="${pet.name}">
     </div>
-    <h4>编号 #${pet.id}</h4>
+    <h4>编号 ${getPetDisplayNo(pet)}</h4>
     <h3>${pet.name}</h3>
     ${statLabel}
     <div style="display:flex;gap:4px;justify-content:center;margin-top:6px;flex-wrap:wrap">
@@ -164,7 +182,7 @@ function renderPets(pets) {
       `).join('')}
     </div>
   `;
-    card.onclick = () => location.href = `detail.html?id=${pet.id}`;
+    card.onclick = () => location.href = `detail.html?id=${getPetLinkId(pet)}`;
     grid.appendChild(card);
   });
 }

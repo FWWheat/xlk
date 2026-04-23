@@ -1,0 +1,21 @@
+{
+  "source": "https://lokewangguoshijie.com",
+  "datasets": {
+    "pokemon": "https://lokewangguoshijie.com/data/pokemon.json",
+    "details": "https://lokewangguoshijie.com/data/details.json",
+    "skills": "https://lokewangguoshijie.com/data/skills.json"
+  },
+  "record_count": 460,
+  "detail_count": 460,
+  "skill_count": 484,
+  "json_output": "C:\\Users\\lijia\\xlk\\data\\extracted\\lokewangguoshijie_pokemon_extracted.json",
+  "csv_output": "C:\\Users\\lijia\\xlk\\data\\extracted\\lokewangguoshijie_pokemon_extracted.csv",
+  "species_csv_output": "C:\\Users\\lijia\\xlk\\data\\extracted\\lokewangguoshijie_species.csv",
+  "species_skill_csv_output": "C:\\Users\\lijia\\xlk\\data\\extracted\\lokewangguoshijie_species_skills.csv",
+  "species_counter_csv_output": "C:\\Users\\lijia\\xlk\\data\\extracted\\lokewangguoshijie_species_counters.csv",
+  "skill_catalog_csv_output": "C:\\Users\\lijia\\xlk\\data\\extracted\\lokewangguoshijie_skill_catalog.csv",
+  "species_row_count": 460,
+  "species_skill_row_count": 34704,
+  "species_counter_row_count": 4947,
+  "skill_catalog_row_count": 484
+}
